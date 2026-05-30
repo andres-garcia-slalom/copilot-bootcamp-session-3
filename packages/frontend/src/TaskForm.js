@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { TextField, Button, Paper, Typography, Box, ToggleButtonGroup, ToggleButton } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import SaveIcon from '@mui/icons-material/Save';
+import { PRIORITY_VALUES, PRIORITY_DEFAULT, PRIORITY_COLORS } from './priorityConstants';
 
 function TaskForm({ onSave, initialTask }) {
   const [title, setTitle] = useState(initialTask?.title || '');
   const [description, setDescription] = useState(initialTask?.description || '');
   const [dueDate, setDueDate] = useState(initialTask?.due_date || '');
-  const [priority, setPriority] = useState(initialTask?.priority || 'P3');
+  const [priority, setPriority] = useState(initialTask?.priority || PRIORITY_DEFAULT);
   const [error, setError] = useState(null);
 
   // Helper to normalize date string to YYYY-MM-DD format
@@ -31,12 +32,12 @@ function TaskForm({ onSave, initialTask }) {
       setTitle(initialTask.title || '');
       setDescription(initialTask.description || '');
       setDueDate(normalizeDateString(initialTask.due_date));
-      setPriority(initialTask.priority || 'P3');
+      setPriority(initialTask.priority || PRIORITY_DEFAULT);
     } else {
       setTitle('');
       setDescription('');
       setDueDate('');
-      setPriority('P3');
+      setPriority(PRIORITY_DEFAULT);
     }
   }, [initialTask]);
 
@@ -51,7 +52,7 @@ function TaskForm({ onSave, initialTask }) {
     setTitle('');
     setDescription('');
     setDueDate('');
-    setPriority('P3');
+    setPriority(PRIORITY_DEFAULT);
   };
 
   return (
@@ -159,7 +160,7 @@ function TaskForm({ onSave, initialTask }) {
             aria-label="task priority"
             data-testid="priority-toggle"
           >
-            {['P1', 'P2', 'P3'].map((p) => (
+            {PRIORITY_VALUES.map((p) => (
               <ToggleButton
                 key={p}
                 value={p}
@@ -171,20 +172,18 @@ function TaskForm({ onSave, initialTask }) {
                   fontSize: '0.85rem',
                   border: 'none',
                   borderRadius: '4px !important',
-                  backgroundColor: priority === p ? '#07F2E6' : '#7A7A7A',
-                  color: priority === p ? '#212121' : '#ffffff',
+                  backgroundColor: priority === p ? PRIORITY_COLORS.selected.backgroundColor : PRIORITY_COLORS.unselected.backgroundColor,
+                  color: priority === p ? PRIORITY_COLORS.selected.color : PRIORITY_COLORS.unselected.color,
                   '&.Mui-selected': {
-                    backgroundColor: '#07F2E6',
-                    color: '#212121',
+                    ...PRIORITY_COLORS.selected,
                     '&:hover': {
-                      backgroundColor: '#07F2E6',
+                      backgroundColor: PRIORITY_COLORS.selected.backgroundColor,
                     }
                   },
                   '&:not(.Mui-selected)': {
-                    backgroundColor: '#7A7A7A',
-                    color: '#ffffff',
+                    ...PRIORITY_COLORS.unselected,
                     '&:hover': {
-                      backgroundColor: '#9A9A9A',
+                      backgroundColor: PRIORITY_COLORS.unselectedHover.backgroundColor,
                     }
                   }
                 }}

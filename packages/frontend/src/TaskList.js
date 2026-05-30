@@ -6,6 +6,7 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import EventIcon from '@mui/icons-material/Event';
+import { PRIORITY_VALUES, PRIORITY_DEFAULT, PRIORITY_COLORS } from './priorityConstants';
 
 function TaskList({ onEdit }) {
   const [tasks, setTasks] = useState([]);
@@ -139,7 +140,7 @@ function TaskList({ onEdit }) {
           </Box>
         )}
         {tasks.map((task, index) => {
-          const taskPriority = task.priority || 'P3';
+          const taskPriority = task.priority || PRIORITY_DEFAULT;
           return (
           <ListItem 
             key={task.id} 
@@ -244,7 +245,7 @@ function TaskList({ onEdit }) {
                 onChange={(e, newPriority) => handlePriorityChange(task, newPriority)}
                 aria-label="task priority"
               >
-                {['P1', 'P2', 'P3'].map((p) => (
+                {PRIORITY_VALUES.map((p) => (
                   <ToggleButton
                     key={p}
                     value={p}
@@ -258,20 +259,18 @@ function TaskList({ onEdit }) {
                       fontWeight: 600,
                       border: 'none',
                       borderRadius: '4px !important',
-                      backgroundColor: taskPriority === p ? '#07F2E6' : '#7A7A7A',
-                      color: taskPriority === p ? '#212121' : '#ffffff',
+                      backgroundColor: taskPriority === p ? PRIORITY_COLORS.selected.backgroundColor : PRIORITY_COLORS.unselected.backgroundColor,
+                      color: taskPriority === p ? PRIORITY_COLORS.selected.color : PRIORITY_COLORS.unselected.color,
                       '&.Mui-selected': {
-                        backgroundColor: '#07F2E6',
-                        color: '#212121',
+                        ...PRIORITY_COLORS.selected,
                         '&:hover': {
-                          backgroundColor: '#07F2E6',
+                          backgroundColor: PRIORITY_COLORS.selected.backgroundColor,
                         }
                       },
                       '&:not(.Mui-selected)': {
-                        backgroundColor: '#7A7A7A',
-                        color: '#ffffff',
+                        ...PRIORITY_COLORS.unselected,
                         '&:hover': {
-                          backgroundColor: '#9A9A9A',
+                          backgroundColor: PRIORITY_COLORS.unselectedHover.backgroundColor,
                         }
                       }
                     }}
