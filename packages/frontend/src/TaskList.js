@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
-  List, ListItem, ListItemText, IconButton, Checkbox, Typography, Box, CircularProgress, Paper, Chip
+  List, ListItem, ListItemText, IconButton, Checkbox, Typography, Box, CircularProgress, Paper, Chip,
+  ToggleButtonGroup, ToggleButton
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -61,6 +62,20 @@ function TaskList({ onEdit }) {
       fetchTasks();
     } catch (err) {
       setError('Failed to delete task');
+    }
+  };
+
+  const handlePriorityChange = async (task, newPriority) => {
+    if (!newPriority) return;
+    try {
+      await fetch(`/api/tasks/${task.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ priority: newPriority })
+      });
+      fetchTasks();
+    } catch (err) {
+      setError('Failed to update priority');
     }
   };
 
@@ -220,6 +235,49 @@ function TaskList({ onEdit }) {
                   }}
                 />
               )}
+              <ToggleButtonGroup
+                exclusive
+                size="small"
+                value={task.priority || 'P3'}
+                onChange={(e, newPriority) => handlePriorityChange(task, newPriority)}
+                aria-label="task priority"
+              >
+                {['P1', 'P2', 'P3'].map((p) => (
+                  <ToggleButton
+                    key={p}
+                    value={p}
+                    aria-label={p}
+                    sx={{
+                      py: 0,
+                      px: 0.75,
+                      minWidth: 28,
+                      height: 20,
+                      fontSize: '0.65rem',
+                      fontWeight: 600,
+                      border: 'none',
+                      borderRadius: '4px !important',
+                      backgroundColor: (task.priority || 'P3') === p ? '#07F2E6' : '#7A7A7A',
+                      color: (task.priority || 'P3') === p ? '#212121' : '#ffffff',
+                      '&.Mui-selected': {
+                        backgroundColor: '#07F2E6',
+                        color: '#212121',
+                        '&:hover': {
+                          backgroundColor: '#07F2E6',
+                        }
+                      },
+                      '&:not(.Mui-selected)': {
+                        backgroundColor: '#7A7A7A',
+                        color: '#ffffff',
+                        '&:hover': {
+                          backgroundColor: '#9A9A9A',
+                        }
+                      }
+                    }}
+                  >
+                    {p}
+                  </ToggleButton>
+                ))}
+              </ToggleButtonGroup>
               <Box 
                 sx={{ 
                   display: 'flex', 
