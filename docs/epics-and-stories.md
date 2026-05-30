@@ -4,28 +4,58 @@
       - Each todo supports an optional `dueDate` field.
       - The `dueDate` value uses ISO `YYYY-MM-DD` format when present.
       - Invalid `dueDate` values are ignored and treated as absent.
+    - Technical Requirements:
+      - Reference the current frontend and backend implementation in the codebase to determine where the todo item model is defined and consumed.
+      - Update the todo data shape to support an optional `dueDate` property.
+      - Ensure the `dueDate` value is stored and passed through the application as an ISO `YYYY-MM-DD` string when valid.
+      - Implement handling so invalid `dueDate` values are ignored and treated as absent.
+      - Preserve compatibility with existing todo items that do not include `dueDate`.
   - Story: Add priority field to todo items
     - Acceptance Criteria:
       - Each todo supports a `priority` field.
       - Allowed `priority` values are `P1`, `P2`, and `P3`.
       - The default `priority` value is `P3`.
+    - Technical Requirements:
+      - Reference the current frontend and backend implementation in the codebase to determine where the todo item model is defined and consumed.
+      - Update the todo data shape to support a `priority` property.
+      - Restrict supported `priority` values to `P1`, `P2`, and `P3`.
+      - Apply `P3` as the default priority when a new todo is created without an explicit priority.
+      - Preserve compatibility with existing todo items that do not include `priority`.
   - Story: Require title for todo items
     - Acceptance Criteria:
       - Each todo must include a `title`.
+    - Technical Requirements:
+      - Reference the current frontend and backend implementation in the codebase to determine where todo creation and update validation occurs.
+      - Ensure the todo model and related create or update flows require a `title` value.
+      - Prevent persistence of todo items that do not include a `title`.
 
 - Epic: MVP - Todo Filtering
   - Story: Add All filter for todo list
     - Acceptance Criteria:
       - The application provides an `All` filter.
       - The `All` view shows completed tasks.
+    - Technical Requirements:
+      - Reference the current frontend implementation in the codebase to determine where todo list filtering controls and list rendering are implemented.
+      - Add an `All` filter option to the existing filter UI.
+      - Ensure the `All` filter returns all todo items, including completed items.
   - Story: Add Today filter for todo list
     - Acceptance Criteria:
       - The application provides a `Today` filter.
       - The `Today` view shows only incomplete tasks.
+    - Technical Requirements:
+      - Reference the current frontend implementation in the codebase to determine where todo list filtering controls and list rendering are implemented.
+      - Add a `Today` filter option to the existing filter UI.
+      - Ensure the `Today` filter returns only incomplete todo items due today.
+      - Ensure todos without a valid due date are excluded from the `Today` filter.
   - Story: Add Overdue filter for todo list
     - Acceptance Criteria:
       - The application provides an `Overdue` filter.
       - The `Overdue` view shows only incomplete tasks.
+    - Technical Requirements:
+      - Reference the current frontend implementation in the codebase to determine where todo list filtering controls and list rendering are implemented.
+      - Add an `Overdue` filter option to the existing filter UI.
+      - Ensure the `Overdue` filter returns only incomplete todo items with a due date earlier than today.
+      - Ensure todos without a valid due date are excluded from the `Overdue` filter.
 
 - Epic: MVP - Local Storage Scope
   - Story: Keep todo storage local
@@ -33,22 +63,43 @@
       - Todo data is stored locally.
       - No backend changes are introduced.
       - No external storage is introduced.
+    - Technical Requirements:
+      - Reference the current frontend and backend implementation in the codebase to confirm the existing persistence approach.
+      - Keep todo persistence within the current local storage approach used by the application.
+      - Do not introduce backend APIs, database changes, or external storage integrations.
+      - Ensure any added todo fields are supported by the existing local persistence mechanism.
 
 - Epic: Post-MVP - Overdue Presentation
   - Story: Visually highlight overdue tasks
     - Acceptance Criteria:
       - Overdue tasks are visually highlighted.
+    - Technical Requirements:
+      - Reference the current frontend implementation in the codebase to determine how todo items are styled and rendered.
+      - Add visual styling for overdue todo items in the list.
+      - Apply overdue styling only to tasks determined to be overdue based on their due date.
 
 - Epic: Post-MVP - Todo Sorting
   - Story: Sort overdue tasks before other tasks
     - Acceptance Criteria:
       - Overdue tasks appear before non-overdue tasks.
+    - Technical Requirements:
+      - Reference the current frontend implementation in the codebase to determine where todo list ordering is applied.
+      - Update the todo list ordering logic so overdue items are grouped before non-overdue items.
   - Story: Sort tasks by priority
     - Acceptance Criteria:
       - Tasks are sorted by priority from `P1` to `P3`.
+    - Technical Requirements:
+      - Reference the current frontend implementation in the codebase to determine where todo list ordering is applied.
+      - Update the todo list ordering logic so tasks are ordered by priority from `P1` to `P3` after overdue grouping is applied.
   - Story: Sort tasks by ascending due date
     - Acceptance Criteria:
       - Tasks are sorted by due date in ascending order after overdue and priority ordering are applied.
+    - Technical Requirements:
+      - Reference the current frontend implementation in the codebase to determine where todo list ordering is applied.
+      - Update the todo list ordering logic so tasks are ordered by ascending due date after overdue and priority ordering are applied.
   - Story: Place undated tasks last
     - Acceptance Criteria:
       - Tasks without a due date appear after tasks with a due date.
+    - Technical Requirements:
+      - Reference the current frontend implementation in the codebase to determine where todo list ordering is applied.
+      - Update the todo list ordering logic so tasks without a due date are placed after tasks with a due date.
