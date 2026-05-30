@@ -12,8 +12,8 @@ const server = setupServer(
     return res(
       ctx.status(200),
       ctx.json([
-        { id: 1, title: 'Test Task 1', description: 'Desc 1', due_date: '2025-09-30', completed: 0 },
-        { id: 2, title: 'Test Task 2', description: 'Desc 2', due_date: '2025-10-01', completed: 1 },
+        { id: 1, title: 'Test Task 1', description: 'Desc 1', due_date: '2025-09-30', priority: 'P1', completed: 0 },
+        { id: 2, title: 'Test Task 2', description: 'Desc 2', due_date: '2025-10-01', priority: 'P3', completed: 1 },
       ])
     );
   }),
@@ -34,6 +34,7 @@ const server = setupServer(
         title,
         description: req.body.description || '',
         due_date: req.body.due_date || null,
+        priority: req.body.priority || 'P3',
         completed: 0,
       })
     );
@@ -43,7 +44,7 @@ const server = setupServer(
   rest.put('/api/tasks/:id', (req, res, ctx) => {
     return res(
       ctx.status(200),
-      ctx.json({ ...req.body, id: Number(req.params.id), completed: 0 })
+      ctx.json({ ...req.body, id: Number(req.params.id), priority: req.body.priority || 'P3', completed: 0 })
     );
   }),
 
@@ -88,8 +89,8 @@ describe('TODO App', () => {
 
   test('adds a new task', async () => {
     let tasks = [
-      { id: 1, title: 'Test Task 1', description: 'Desc 1', due_date: '2025-09-30', completed: 0 },
-      { id: 2, title: 'Test Task 2', description: 'Desc 2', due_date: '2025-10-01', completed: 1 },
+      { id: 1, title: 'Test Task 1', description: 'Desc 1', due_date: '2025-09-30', priority: 'P1', completed: 0 },
+      { id: 2, title: 'Test Task 2', description: 'Desc 2', due_date: '2025-10-01', priority: 'P3', completed: 1 },
     ];
     server.use(
       rest.get('/api/tasks', (req, res, ctx) => {
@@ -102,6 +103,7 @@ describe('TODO App', () => {
           title,
           description: description || '',
           due_date: req.body.due_date || null,
+          priority: req.body.priority || 'P3',
           completed: 0,
         };
         tasks = [...tasks, newTask];
@@ -121,6 +123,26 @@ describe('TODO App', () => {
     await waitFor(() => {
       expect(screen.getByText(/New Test Task/i)).toBeInTheDocument();
     });
+  });
+
+  test('displays priority chips for tasks', async () => {
+    await act(async () => {
+      render(<App />);
+    });
+    await waitFor(() => {
+      expect(screen.getByTestId('priority-chip-1')).toBeInTheDocument();
+      expect(screen.getByTestId('priority-chip-2')).toBeInTheDocument();
+    });
+    expect(screen.getByTestId('priority-chip-1')).toHaveTextContent('P1');
+    expect(screen.getByTestId('priority-chip-2')).toHaveTextContent('P3');
+  });
+
+  test('priority select defaults to P3', async () => {
+    await act(async () => {
+      render(<App />);
+    });
+    const prioritySelect = screen.getByTestId('priority-select');
+    expect(prioritySelect).toHaveValue('P3');
   });
 
   test('handles API error', async () => {
