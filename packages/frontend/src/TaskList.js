@@ -138,7 +138,9 @@ function TaskList({ onEdit }) {
             <Typography variant="body2">No tasks found.</Typography>
           </Box>
         )}
-        {tasks.map((task, index) => (
+        {tasks.map((task, index) => {
+          const taskPriority = task.priority || 'P3';
+          return (
           <ListItem 
             key={task.id} 
             sx={{ 
@@ -238,7 +240,7 @@ function TaskList({ onEdit }) {
               <ToggleButtonGroup
                 exclusive
                 size="small"
-                value={task.priority || 'P3'}
+                value={taskPriority}
                 onChange={(e, newPriority) => handlePriorityChange(task, newPriority)}
                 aria-label="task priority"
               >
@@ -256,8 +258,8 @@ function TaskList({ onEdit }) {
                       fontWeight: 600,
                       border: 'none',
                       borderRadius: '4px !important',
-                      backgroundColor: (task.priority || 'P3') === p ? '#07F2E6' : '#7A7A7A',
-                      color: (task.priority || 'P3') === p ? '#212121' : '#ffffff',
+                      backgroundColor: taskPriority === p ? '#07F2E6' : '#7A7A7A',
+                      color: taskPriority === p ? '#212121' : '#ffffff',
                       '&.Mui-selected': {
                         backgroundColor: '#07F2E6',
                         color: '#212121',
@@ -318,7 +320,8 @@ function TaskList({ onEdit }) {
               </Box>
             </Box>
           </ListItem>
-        ))}
+          );
+        })}
       </List>
     </Paper>
   );

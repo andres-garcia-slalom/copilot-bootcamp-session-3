@@ -55,6 +55,8 @@ db.exec(`
 
 console.log('In-memory database initialized for TODO tasks');
 
+const VALID_PRIORITIES = ['P1', 'P2', 'P3'];
+
 // --- TASK API ENDPOINTS ---
 
 // Helper: build dynamic WHERE clause for filtering/search
@@ -96,8 +98,7 @@ app.post('/api/tasks', (req, res) => {
     if (!title || typeof title !== 'string' || title.trim() === '') {
       return res.status(400).json({ error: 'Task title is required' });
     }
-    const validPriorities = ['P1', 'P2', 'P3'];
-    const taskPriority = validPriorities.includes(priority) ? priority : 'P3';
+    const taskPriority = VALID_PRIORITIES.includes(priority) ? priority : 'P3';
     const stmt = db.prepare('INSERT INTO tasks (title, description, due_date, priority) VALUES (?, ?, ?, ?)');
     const result = stmt.run(title, description || '', due_date || null, taskPriority);
     const newTask = db.prepare('SELECT * FROM tasks WHERE id = ?').get(result.lastInsertRowid);
@@ -127,8 +128,7 @@ app.put('/api/tasks/:id', (req, res) => {
     if (!title || typeof title !== 'string' || title.trim() === '') {
       return res.status(400).json({ error: 'Task title is required' });
     }
-    const validPriorities = ['P1', 'P2', 'P3'];
-    const taskPriority = validPriorities.includes(priority) ? priority : 'P3';
+    const taskPriority = VALID_PRIORITIES.includes(priority) ? priority : 'P3';
     const stmt = db.prepare('UPDATE tasks SET title = ?, description = ?, due_date = ?, priority = ? WHERE id = ?');
     const result = stmt.run(title, description || '', due_date || null, taskPriority, req.params.id);
     if (result.changes === 0) return res.status(404).json({ error: 'Task not found' });
@@ -156,8 +156,7 @@ app.patch('/api/tasks/:id', (req, res) => {
       db.prepare('UPDATE tasks SET completed = ? WHERE id = ?').run(completed ? 1 : 0, req.params.id);
     }
     if (priority !== undefined) {
-      const validPriorities = ['P1', 'P2', 'P3'];
-      if (!validPriorities.includes(priority)) {
+      if (!VALID_PRIORITIES.includes(priority)) {
         return res.status(400).json({ error: 'Priority must be P1, P2, or P3' });
       }
       db.prepare('UPDATE tasks SET priority = ? WHERE id = ?').run(priority, req.params.id);
