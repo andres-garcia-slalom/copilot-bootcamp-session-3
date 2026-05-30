@@ -16,6 +16,24 @@ flowchart LR
     Backend -->|Reads/Writes todos| Storage
 ```
 
+## Sequence Diagram: Creating a TODO
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant Frontend as Frontend App\nReact
+    participant Backend as Backend API\nNode.js + Express
+    participant Storage as Todo Data Store
+
+    User->>Frontend: Enter todo details and submit form
+    Frontend->>Backend: POST /todos with todo payload
+    Backend->>Backend: Validate request data
+    Backend->>Storage: Save new todo
+    Storage-->>Backend: Persisted todo record
+    Backend-->>Frontend: 201 Created with saved todo
+    Frontend-->>User: Render updated todo list with new item
+```
+
 ## Repository Context
 
 - `packages/frontend`: React frontend application
