@@ -3,8 +3,8 @@
 ## Component Library
 
 - Use Material UI (MUI) components for all form elements, buttons, dialogs, and lists.
-- Display task priority as a color-coded chip/badge (MUI `Chip`) next to each task title.
-- Use a select dropdown constrained to P1/P2/P3 for task create/edit forms.
+- Display task priority as a radio-style toggle button group (MUI `ToggleButtonGroup` with exclusive selection) showing P1, P2, and P3 buttons per task.
+- Only one priority button can be selected at a time (radio behavior).
 
 ## Color Palette
 
@@ -14,11 +14,9 @@
 - Text: #212121 (dark gray/black)
 - Completed tasks: #9e9e9e (gray, with strikethrough)
 
-### Priority Colors
-
-- P1 (Critical): #d32f2f (red)
-- P2 (High): #f57c00 (orange)
-- P3 (Normal): #388e3c (green)
+### Priority Button Colors
+- Unselected: #7A7A7A (gray)
+- Selected: #07F2E6 (cyan/blue)
 
 ## Button Styles
 
