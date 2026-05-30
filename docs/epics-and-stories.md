@@ -1,12 +1,54 @@
-Based on the requirements in `docs/prd-todo.md`, generate a list of epic titles and story titles only.
+- Epic: MVP - Todo Data Model
+  - Story: Add due date field to todo items
+    - Acceptance Criteria:
+      - Each todo supports an optional `dueDate` field.
+      - The `dueDate` value uses ISO `YYYY-MM-DD` format when present.
+      - Invalid `dueDate` values are ignored and treated as absent.
+  - Story: Add priority field to todo items
+    - Acceptance Criteria:
+      - Each todo supports a `priority` field.
+      - Allowed `priority` values are `P1`, `P2`, and `P3`.
+      - The default `priority` value is `P3`.
+  - Story: Require title for todo items
+    - Acceptance Criteria:
+      - Each todo must include a `title`.
 
-Follow the structure and constraints defined in `docs/templates/epic-and-stories-template.md`.
+- Epic: MVP - Todo Filtering
+  - Story: Add All filter for todo list
+    - Acceptance Criteria:
+      - The application provides an `All` filter.
+      - The `All` view shows completed tasks.
+  - Story: Add Today filter for todo list
+    - Acceptance Criteria:
+      - The application provides a `Today` filter.
+      - The `Today` view shows only incomplete tasks.
+  - Story: Add Overdue filter for todo list
+    - Acceptance Criteria:
+      - The application provides an `Overdue` filter.
+      - The `Overdue` view shows only incomplete tasks.
 
-Requirements for the output:
-- Cover both MVP and Post-MVP requirements from `docs/prd-todo.md`.
-- Break the work into epics with story titles under each epic.
-- Omit acceptance criteria.
-- Omit technical details.
-- Do not add descriptions, summaries, or extra commentary.
-- Do not invent features that are not present in `docs/prd-todo.md`.
-- Output only epic titles and story titles using the template’s format.
+- Epic: MVP - Local Storage Scope
+  - Story: Keep todo storage local
+    - Acceptance Criteria:
+      - Todo data is stored locally.
+      - No backend changes are introduced.
+      - No external storage is introduced.
+
+- Epic: Post-MVP - Overdue Presentation
+  - Story: Visually highlight overdue tasks
+    - Acceptance Criteria:
+      - Overdue tasks are visually highlighted.
+
+- Epic: Post-MVP - Todo Sorting
+  - Story: Sort overdue tasks before other tasks
+    - Acceptance Criteria:
+      - Overdue tasks appear before non-overdue tasks.
+  - Story: Sort tasks by priority
+    - Acceptance Criteria:
+      - Tasks are sorted by priority from `P1` to `P3`.
+  - Story: Sort tasks by ascending due date
+    - Acceptance Criteria:
+      - Tasks are sorted by due date in ascending order after overdue and priority ordering are applied.
+  - Story: Place undated tasks last
+    - Acceptance Criteria:
+      - Tasks without a due date appear after tasks with a due date.
