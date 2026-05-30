@@ -15,6 +15,18 @@ function TaskList({ onEdit }) {
     fetchTasks();
   }, []);
 
+  const getPriorityStyle = (priority) => {
+    switch (priority) {
+      case 'P1':
+        return { background: 'linear-gradient(135deg, #f44336 0%, #c62828 100%)', color: 'white' };
+      case 'P2':
+        return { background: 'linear-gradient(135deg, #ff9800 0%, #e65100 100%)', color: 'white' };
+      case 'P3':
+      default:
+        return { background: 'linear-gradient(135deg, #4caf50 0%, #2e7d32 100%)', color: 'white' };
+    }
+  };
+
   const formatDueDate = (dateString) => {
     if (!dateString) return null;
     // Parse as local date to avoid timezone offset issues
@@ -220,6 +232,17 @@ function TaskList({ onEdit }) {
                   }}
                 />
               )}
+              <Chip
+                label={task.priority || 'P3'}
+                size="small"
+                data-testid={`priority-chip-${task.id}`}
+                sx={{
+                  height: 20,
+                  fontSize: '0.7rem',
+                  fontWeight: 600,
+                  ...getPriorityStyle(task.priority || 'P3'),
+                }}
+              />
               <Box 
                 sx={{ 
                   display: 'flex', 

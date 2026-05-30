@@ -21,6 +21,30 @@ describe('Tasks API', () => {
     taskId = res.body.id;
   });
 
+  it('should default priority to P3 when not specified', async () => {
+    const res = await request(app)
+      .post('/api/tasks')
+      .send({ title: 'No Priority Task' });
+    expect(res.status).toBe(201);
+    expect(res.body.priority).toBe('P3');
+  });
+
+  it('should store explicit priority when provided', async () => {
+    const res = await request(app)
+      .post('/api/tasks')
+      .send({ title: 'High Priority Task', priority: 'P1' });
+    expect(res.status).toBe(201);
+    expect(res.body.priority).toBe('P1');
+  });
+
+  it('should default priority to P3 for invalid priority value', async () => {
+    const res = await request(app)
+      .post('/api/tasks')
+      .send({ title: 'Bad Priority Task', priority: 'P5' });
+    expect(res.status).toBe(201);
+    expect(res.body.priority).toBe('P3');
+  });
+
   it('should get all tasks', async () => {
     const res = await request(app).get('/api/tasks');
     expect(res.status).toBe(200);
@@ -34,14 +58,15 @@ describe('Tasks API', () => {
     expect(res.body.id).toBe(taskId);
   });
 
-  it('should update a task', async () => {
+  it('should update a task including priority', async () => {
     const res = await request(app)
       .put(`/api/tasks/${taskId}`)
-      .send({ title: 'Updated Task', description: 'Updated', due_date: '2025-10-01' });
+      .send({ title: 'Updated Task', description: 'Updated', due_date: '2025-10-01', priority: 'P2' });
     expect(res.status).toBe(200);
     expect(res.body.title).toBe('Updated Task');
     expect(res.body.description).toBe('Updated');
     expect(res.body.due_date).toBe('2025-10-01');
+    expect(res.body.priority).toBe('P2');
   });
 
   it('should mark a task as completed', async () => {
