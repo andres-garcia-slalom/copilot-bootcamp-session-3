@@ -3,14 +3,14 @@ export const PRIORITY_DEFAULT = 'P3';
 
 export const PRIORITY_COLORS = {
   selected: {
-    backgroundColor: '#07F2E6',
-    color: '#212121',
+    backgroundColor: 'var(--priority-selected-bg)',
+    color: 'var(--priority-selected-color)',
   },
   unselected: {
-    backgroundColor: '#7A7A7A',
-    color: '#ffffff',
+    backgroundColor: 'var(--priority-unselected-bg)',
+    color: 'var(--priority-unselected-color)',
   },
   unselectedHover: {
-    backgroundColor: '#9A9A9A',
+    backgroundColor: 'var(--priority-unselected-hover-bg)',
   },
 };
