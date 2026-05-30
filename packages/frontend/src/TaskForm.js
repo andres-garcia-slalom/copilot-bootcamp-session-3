@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, Button, Paper, Typography, Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { TextField, Button, Paper, Typography, Box, ToggleButtonGroup, ToggleButton } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import SaveIcon from '@mui/icons-material/Save';
+import { PRIORITY_VALUES, PRIORITY_DEFAULT, PRIORITY_COLORS } from './priorityConstants';
 
 function TaskForm({ onSave, initialTask }) {
   const [title, setTitle] = useState(initialTask?.title || '');
   const [description, setDescription] = useState(initialTask?.description || '');
   const [dueDate, setDueDate] = useState(initialTask?.due_date || '');
-  const [priority, setPriority] = useState(initialTask?.priority || 'P3');
+  const [priority, setPriority] = useState(initialTask?.priority || PRIORITY_DEFAULT);
   const [error, setError] = useState(null);
 
   // Helper to normalize date string to YYYY-MM-DD format
@@ -31,12 +32,12 @@ function TaskForm({ onSave, initialTask }) {
       setTitle(initialTask.title || '');
       setDescription(initialTask.description || '');
       setDueDate(normalizeDateString(initialTask.due_date));
-      setPriority(initialTask.priority || 'P3');
+      setPriority(initialTask.priority || PRIORITY_DEFAULT);
     } else {
       setTitle('');
       setDescription('');
       setDueDate('');
-      setPriority('P3');
+      setPriority(PRIORITY_DEFAULT);
     }
   }, [initialTask]);
 
@@ -51,7 +52,7 @@ function TaskForm({ onSave, initialTask }) {
     setTitle('');
     setDescription('');
     setDueDate('');
-    setPriority('P3');
+    setPriority(PRIORITY_DEFAULT);
   };
 
   return (
@@ -147,30 +148,51 @@ function TaskForm({ onSave, initialTask }) {
             }
           }}
         />
-        <FormControl fullWidth size="small">
-          <InputLabel id="priority-label">Priority</InputLabel>
-          <Select
-            labelId="priority-label"
-            id="task-priority"
+        <Box>
+          <Typography variant="caption" sx={{ color: '#616161', fontWeight: 500, mb: 0.5, display: 'block' }}>
+            Priority
+          </Typography>
+          <ToggleButtonGroup
+            exclusive
+            size="small"
             value={priority}
-            label="Priority"
-            onChange={e => setPriority(e.target.value)}
-            inputProps={{ 'data-testid': 'priority-select' }}
-            sx={{
-              borderRadius: 2,
-              '&:hover .MuiOutlinedInput-notchedOutline': {
-                borderColor: '#1976d2',
-              },
-              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                borderColor: '#1976d2',
-              }
-            }}
+            onChange={(e, newPriority) => { if (newPriority) setPriority(newPriority); }}
+            aria-label="task priority"
+            data-testid="priority-toggle"
           >
-            <MenuItem value="P1">P1 – High</MenuItem>
-            <MenuItem value="P2">P2 – Medium</MenuItem>
-            <MenuItem value="P3">P3 – Low</MenuItem>
-          </Select>
-        </FormControl>
+            {PRIORITY_VALUES.map((p) => (
+              <ToggleButton
+                key={p}
+                value={p}
+                aria-label={p}
+                sx={{
+                  px: 2,
+                  py: 0.5,
+                  fontWeight: 600,
+                  fontSize: '0.85rem',
+                  border: 'none',
+                  borderRadius: '4px !important',
+                  backgroundColor: priority === p ? PRIORITY_COLORS.selected.backgroundColor : PRIORITY_COLORS.unselected.backgroundColor,
+                  color: priority === p ? PRIORITY_COLORS.selected.color : PRIORITY_COLORS.unselected.color,
+                  '&.Mui-selected': {
+                    ...PRIORITY_COLORS.selected,
+                    '&:hover': {
+                      backgroundColor: PRIORITY_COLORS.selected.backgroundColor,
+                    }
+                  },
+                  '&:not(.Mui-selected)': {
+                    ...PRIORITY_COLORS.unselected,
+                    '&:hover': {
+                      backgroundColor: PRIORITY_COLORS.unselectedHover.backgroundColor,
+                    }
+                  }
+                }}
+              >
+                {p}
+              </ToggleButton>
+            ))}
+          </ToggleButtonGroup>
+        </Box>
         {error && <Typography color="error" sx={{ fontWeight: 500, fontSize: '0.875rem' }}>{error}</Typography>}
         <Box display="flex" gap={2}>
           <Button 

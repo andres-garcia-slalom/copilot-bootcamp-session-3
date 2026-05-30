@@ -10,3 +10,4 @@
 8. The user can filter tasks by completion status (all, completed, incomplete).
 9. The user can search for tasks by keyword in the title or description.
 10. The user can view details of a single task.
+11. The user can assign a priority (P1, P2, or P3) to each task. New tasks default to P3 if no priority is explicitly set. The user can change the priority of an existing task, and tasks can be filtered or sorted by priority.

@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import {
-  List, ListItem, ListItemText, IconButton, Checkbox, Typography, Box, CircularProgress, Paper, Chip
+  List, ListItem, ListItemText, IconButton, Checkbox, Typography, Box, CircularProgress, Paper, Chip,
+  ToggleButtonGroup, ToggleButton
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import EventIcon from '@mui/icons-material/Event';
+import { PRIORITY_VALUES, PRIORITY_DEFAULT, PRIORITY_COLORS } from './priorityConstants';
 
 function TaskList({ onEdit }) {
   const [tasks, setTasks] = useState([]);
@@ -76,6 +78,20 @@ function TaskList({ onEdit }) {
     }
   };
 
+  const handlePriorityChange = async (task, newPriority) => {
+    if (!newPriority) return;
+    try {
+      await fetch(`/api/tasks/${task.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ priority: newPriority })
+      });
+      fetchTasks();
+    } catch (err) {
+      setError('Failed to update priority');
+    }
+  };
+
   if (loading) return (
     <Box display="flex" justifyContent="center" alignItems="center" minHeight="200px">
       <CircularProgress sx={{ color: '#1976d2' }} />
@@ -135,7 +151,9 @@ function TaskList({ onEdit }) {
             <Typography variant="body2">No tasks found.</Typography>
           </Box>
         )}
-        {tasks.map((task, index) => (
+        {tasks.map((task, index) => {
+          const taskPriority = task.priority || PRIORITY_DEFAULT;
+          return (
           <ListItem 
             key={task.id} 
             sx={{ 
@@ -232,17 +250,47 @@ function TaskList({ onEdit }) {
                   }}
                 />
               )}
-              <Chip
-                label={task.priority || 'P3'}
+              <ToggleButtonGroup
+                exclusive
                 size="small"
-                data-testid={`priority-chip-${task.id}`}
-                sx={{
-                  height: 20,
-                  fontSize: '0.7rem',
-                  fontWeight: 600,
-                  ...getPriorityStyle(task.priority || 'P3'),
-                }}
-              />
+                value={taskPriority}
+                onChange={(e, newPriority) => handlePriorityChange(task, newPriority)}
+                aria-label="task priority"
+              >
+                {PRIORITY_VALUES.map((p) => (
+                  <ToggleButton
+                    key={p}
+                    value={p}
+                    aria-label={p}
+                    sx={{
+                      py: 0,
+                      px: 0.75,
+                      minWidth: 28,
+                      height: 20,
+                      fontSize: '0.65rem',
+                      fontWeight: 600,
+                      border: 'none',
+                      borderRadius: '4px !important',
+                      backgroundColor: taskPriority === p ? PRIORITY_COLORS.selected.backgroundColor : PRIORITY_COLORS.unselected.backgroundColor,
+                      color: taskPriority === p ? PRIORITY_COLORS.selected.color : PRIORITY_COLORS.unselected.color,
+                      '&.Mui-selected': {
+                        ...PRIORITY_COLORS.selected,
+                        '&:hover': {
+                          backgroundColor: PRIORITY_COLORS.selected.backgroundColor,
+                        }
+                      },
+                      '&:not(.Mui-selected)': {
+                        ...PRIORITY_COLORS.unselected,
+                        '&:hover': {
+                          backgroundColor: PRIORITY_COLORS.unselectedHover.backgroundColor,
+                        }
+                      }
+                    }}
+                  >
+                    {p}
+                  </ToggleButton>
+                ))}
+              </ToggleButtonGroup>
               <Box 
                 sx={{ 
                   display: 'flex', 
@@ -283,7 +331,8 @@ function TaskList({ onEdit }) {
               </Box>
             </Box>
           </ListItem>
-        ))}
+          );
+        })}
       </List>
     </Paper>
   );
